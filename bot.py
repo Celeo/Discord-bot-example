@@ -10,7 +10,7 @@ with open('config.json') as f:
 bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], description=config['BOT_DESCRIPTION'])
 crest = pycrest.EVE()
 item_data = crest().marketTypes()
-
+command_names = ('slap', 'lastkill', 'lastdeath', 'hs', 'spais', 'price')
 
 # Commands:
 #   - slap [user] - slap a user
@@ -27,26 +27,11 @@ async def on_ready():
 
 
 @bot.event
-async def on_error(event, *args, **kwargs):
-    print('Error: ' + str(event))
-
-
-@bot.event
 async def on_message(message):
-    # print('Messge from "{0.author.name}" of "{0.content}"'.format(message))
     await bot.process_commands(message)
-
-
-@bot.event
-async def on_member_update(before, after):
-    # print('{0.name} changed their profile'.format(after))
-    pass
-
-
-@bot.event
-async def on_typing(channel, user, when):
-    # print('{1.name} is typing in channel {0.name}'.format(channel, user))
-    pass
+    if message.content.startswith(config['COMMAND_PREFIX']) and not message.content.lower() in command_names:
+        await bot.send_message(message.channel, 'If you were talking to me, I didn\'t catch that')
+        print('Unknown command "{}"'.format(message.content))
 
 
 @bot.command(name='slap', description='slap a user')
@@ -56,14 +41,14 @@ async def command_slap(user):
 
 @bot.command(name='lastkill')
 async def command_lastkill():
-    js = request.get('https://zkillboard.com/api/kills/corporationID/98134538/kills/limit/1/').json()
-    print('"lastkill" command not implemented')
+    js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/kills/limit/1/'.format(config['CORP']['ID'])).json()
+    await bot.say('Latest {} kill: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
 
 
 @bot.command(name='lastdeath')
 async def command_lastdeath():
-    js = request.get('https://zkillboard.com/api/kills/corporationID/98134538/losses/limit/1/').json()
-    print('"lastdeath" command not implemented')
+    js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/losses/limit/1/'.format(config['CORP']['ID'])).json()
+    await bot.say('Latest {} death: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
 
 
 @bot.command(name='hs')

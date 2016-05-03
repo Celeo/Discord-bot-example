@@ -1,5 +1,9 @@
 {
     "COMMAND_PREFIX": "!",
     "BOT_DESCRIPTION": "GETIN Eve Alliance bot",
+    "CORP": {
+        "NAME": "Wormbro",
+        "ID": 98134538
+    },
     "BOT_TOKEN": "MTc2ODY2NDEwMDQxOTY2NjAy.Cgp8iQ.pJQOhPCWZCbh1vpcfL0DdqWtVzk"
 }
