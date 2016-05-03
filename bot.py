@@ -7,6 +7,14 @@ with open('config.json') as f:
     config = json.load(f)
 bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], description=config['BOT_DESCRIPTION'])
 
+# Commands:
+#   - slap [user] - slap a user
+#   - lastkill - links to the most recent corp kill
+#   - lastdeath - links to the most recent corp dath
+#   - hs - prints if there's a HS in the chain
+#   - spais - prints the names of the people in chat who aren't in the corp
+#   - price [name] - prints the Jita price for the item by name
+
 
 @bot.event
 async def on_ready():
