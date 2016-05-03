@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 from discord.ext import commands
 import pycrest
+import requests
 import json
 
 
 with open('config.json') as f:
     config = json.load(f)
 bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], description=config['BOT_DESCRIPTION'])
+crest = pycrest.EVE()
+item_data = crest().marketTypes()
+
 
 # Commands:
 #   - slap [user] - slap a user
@@ -52,11 +56,13 @@ async def command_slap(user):
 
 @bot.command(name='lastkill')
 async def command_lastkill():
+    js = request.get('https://zkillboard.com/api/kills/corporationID/98134538/kills/limit/1/').json()
     print('"lastkill" command not implemented')
 
 
 @bot.command(name='lastdeath')
 async def command_lastdeath():
+    js = request.get('https://zkillboard.com/api/kills/corporationID/98134538/losses/limit/1/').json()
     print('"lastdeath" command not implemented')
 
 
