@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from discord.ext import commands
+import pycrest
 import json
 
 
@@ -45,8 +46,33 @@ async def on_typing(channel, user, when):
 
 
 @bot.command(name='slap', description='slap a user')
-async def slap(user):
+async def command_slap(user):
     await bot.say('* slaps {} around a bit with a large trout*'.format(user))
+
+
+@bot.command(name='lastkill')
+async def command_lastkill():
+    print('"lastkill" command not implemented')
+
+
+@bot.command(name='lastdeath')
+async def command_lastdeath():
+    print('"lastdeath" command not implemented')
+
+
+@bot.command(name='hs')
+async def command_hs():
+    print('"hs" command not implemented')
+
+
+@bot.command(name='spais')
+async def command_spais():
+    print('"spais" command not implemented')
+
+
+@bot.command(name='price')
+async def command_price(item):
+    print('"price" command not implemented')
 
 
 if __name__ == '__main__':
