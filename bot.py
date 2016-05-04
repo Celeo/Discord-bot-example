@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from discord.ext import commands
-import pycrest
+# import pycrest
 import requests
 import json
 from datetime import datetime
@@ -10,20 +10,12 @@ with open('config.json') as f:
     config = json.load(f)
 print('Creating bot object ...')
 bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], description=config['BOT_DESCRIPTION'])
-print('Connecting to CREST ...')
-crest = pycrest.EVE()
-print('Getting item data ...')
-item_data = crest().marketTypes()
-command_names = ('slap', 'lastkill', 'lastdeath', 'hs', 'spais', 'price')
+# print('Connecting to CREST ...')
+# crest = pycrest.EVE()
+# print('Getting item data ...')
+# item_data = crest().marketTypes()
+command_names = ('slap', 'lastkill', 'lastdeath', 'hs', 'spais', 'spies', 'spy', 'price', 'joined')
 print('Setup complete')
-
-# Commands:
-#   - slap [user] - slap a user
-#   - lastkill - links to the most recent corp kill
-#   - lastdeath - links to the most recent corp dath
-#   - hs - prints if there's a HS in the chain
-#   - spais - prints the names of the people in chat who aren't in the corp
-#   - price [name] - prints the Jita price for the item by name
 
 
 def log(message):
@@ -67,17 +59,26 @@ async def command_lastdeath():
 
 @bot.command(name='hs')
 async def command_hs():
+    # TODO
     log('"hs" command not implemented')
+    await bot.say('I don\'t know if there\'s a highsec system in the chain yet.')
 
 
-@bot.command(name='spais')
+@bot.command(name='spais', aliases=['spies', 'spy'], pass_context=True)
 async def command_spais():
-    log('"spais" command not implemented')
+    await bot.say('You\'re a spy, {0.author.name}!'.format(member))
 
 
 @bot.command(name='price')
 async def command_price(item):
+    # TODO
     log('"price" command not implemented')
+    await bot.say('*shrugs*')
+
+
+@bot.command(name='joined')
+async def command_joined(member):
+    await bot.say('{0.name} joined in {0.joined_at}'.format(member))
 
 
 if __name__ == '__main__':
