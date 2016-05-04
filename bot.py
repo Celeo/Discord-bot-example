@@ -4,6 +4,7 @@ from discord.ext import commands
 import requests
 import json
 from datetime import datetime
+from random import randint
 
 
 with open('config.json') as f:
@@ -57,16 +58,25 @@ async def command_lastdeath():
     await bot.say('Latest {} death: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
 
 
-@bot.command(name='hs')
-async def command_hs():
+@bot.command(name='hs', pass_context=True)
+async def command_hs(context):
+    print('Command in: ' + context.message.channel.name)
+    if not context.message.channel.name == 'opsec':
+        await bot.say('This isn\'t the opsec channel, you spy!')
+        return
     # TODO
     log('"hs" command not implemented')
-    await bot.say('I don\'t know if there\'s a highsec system in the chain yet.')
+    await bot.say('I don\'t know if there\'s a highsec system in the chain because I don\'t have eyes.')
 
 
 @bot.command(name='spais', aliases=['spies', 'spy'], pass_context=True)
-async def command_spais():
-    await bot.say('You\'re a spy, {0.author.name}!'.format(member))
+async def command_spais(context):
+    online_members = list(context.message.channel.server.members)
+    spy = online_members[randint(0, len(online_members) - 1)]
+    if spy.name == context.message.server.me.name:
+        await bot.say('I am a spy!')
+    else:
+        await bot.say('{0.name} is a spy!'.format(spy))
 
 
 @bot.command(name='price')
@@ -83,7 +93,7 @@ async def command_joined(member):
 
 if __name__ == '__main__':
     try:
-        log('Running ...')
+        log('Starting run loop ...')
         bot.loop.run_until_complete(bot.start(config['BOT_TOKEN']))
     except KeyboardInterrupt:
         log('Logging out ...')
