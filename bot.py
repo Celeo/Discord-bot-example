@@ -40,18 +40,18 @@ async def on_message(message):
         log('Bot in message: "{}"'.format(message.content))
 
 
-@bot.command(name='slap', no_pm=True, description='slap a user', help='slap a user')
-async def command_slap(user):
+@bot.command(name='slap', description='slap a user', help='slap a user')
+async def command_slap(user: str):
     await bot.say('* slaps {} around a bit with a large trout*'.format(user))
 
 
-@bot.command(name='lastkill', no_pm=True, description='show the last Wormbro kill', help='show the last Wormbro kill')
+@bot.command(name='lastkill', description='show the last Wormbro kill', help='show the last Wormbro kill')
 async def command_lastkill():
     js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/kills/limit/1/'.format(config['CORP']['ID'])).json()[0]
     await bot.say('Latest {} kill: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
 
 
-@bot.command(name='lastdeath', no_pm=True, description='show the last Wormbro kill', help='show the last Wormbro kill')
+@bot.command(name='lastdeath', description='show the last Wormbro kill', help='show the last Wormbro kill')
 async def command_lastdeath():
     js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/losses/limit/1/'.format(config['CORP']['ID'])).json()[0]
     await bot.say('Latest {} death: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
@@ -78,14 +78,14 @@ async def command_spais(context):
         await bot.say('{0.name} is a spy!'.format(spy))
 
 
-@bot.command(name='price', no_pm=True, description='price-check an item name in Jita', help='Price-check an item name in Jita')
-async def command_price(item):
+@bot.command(name='price', description='price-check an item name in Jita', help='Price-check an item name in Jita')
+async def command_price(item: str):
     # TODO
     log('"price" command not implemented')
     await bot.say('*shrugs*')
 
 
-@bot.command(name='joined', no_pm=True, pass_context=True, description='print the target\'s join date', help='Print the target\'s join date')
+@bot.command(name='joined', pass_context=True, description='print the target\'s join date', help='Print the target\'s join date')
 async def command_joined(context, member: discord.Member=None):
     if not member:
         member = context.message.author
@@ -94,6 +94,35 @@ async def command_joined(context, member: discord.Member=None):
         await bot.say('I joined on {0.joined_at}'.format(member))
     else:
         await bot.say('{0.name} joined on {0.joined_at}'.format(member))
+
+
+@bot.command(name='link', aliases=['links'], description='shows a link', help='shows a link')
+async def command_link(target: str=None):
+    if not target:
+        if config['LINKS']:
+            await bot.say('Configured links: ' + ', '.join(config['LINKS'].keys()))
+        else:
+            await bot.say('No links configured - add links with !addlink [name] [url]')
+        return
+    target = target.lower()
+    if target in config['LINKS']:
+        await bot.say(config['LINKS'][target])
+    else:
+        await bot.say('I don\'t know what that is. Have you tried Google?')
+
+
+@bot.command(name='addlink', aliases=['setlink'], description='add or set a link', help='add or set a link')
+async def command_addlink(target: str=None, url: str=None):
+    if not target or not url:
+        await bot.say('It\'s !addlink [name] [url]')
+        return
+    url = ('http://' + url) if not url.lower().startswith('http://') and not url.lower().startswith('https://') else url
+    config["LINKS"][target.lower()] = url
+    log('Writing new configuration ...')
+    with open('config.json', 'w') as f:
+        f.write(json.dumps(config, indent=4, sort_keys=True))
+    log('Done writing configuration')
+    await bot.say('Link added')
 
 
 if __name__ == '__main__':

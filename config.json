@@ -1,10 +1,11 @@
 {
-    "LOG_FILENAME": "bot.log",
-    "COMMAND_PREFIX": "!",
     "BOT_DESCRIPTION": "GETIN Eve Alliance bot",
+    "BOT_TOKEN": "MTc2ODY2NDEwMDQxOTY2NjAy.Cgp8iQ.pJQOhPCWZCbh1vpcfL0DdqWtVzk",
+    "COMMAND_PREFIX": "!",
     "CORP": {
-        "NAME": "Wormbro",
-        "ID": 98134538
+        "ID": 98134538,
+        "NAME": "Wormbro"
     },
-    "BOT_TOKEN": "MTc2ODY2NDEwMDQxOTY2NjAy.Cgp8iQ.pJQOhPCWZCbh1vpcfL0DdqWtVzk"
+    "LINKS": {},
+    "LOG_FILENAME": "bot.log"
 }
