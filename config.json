@@ -1,4 +1,5 @@
 {
+    "LOG_FILENAME": "bot.log",
     "COMMAND_PREFIX": "!",
     "BOT_DESCRIPTION": "GETIN Eve Alliance bot",
     "CORP": {

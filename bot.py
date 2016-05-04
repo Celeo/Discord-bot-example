@@ -8,10 +8,14 @@ from datetime import datetime
 
 with open('config.json') as f:
     config = json.load(f)
+print('Creating bot object ...')
 bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], description=config['BOT_DESCRIPTION'])
+print('Connecting to CREST ...')
 crest = pycrest.EVE()
+print('Getting item data ...')
 item_data = crest().marketTypes()
 command_names = ('slap', 'lastkill', 'lastdeath', 'hs', 'spais', 'price')
+print('Setup complete')
 
 # Commands:
 #   - slap [user] - slap a user
@@ -23,8 +27,10 @@ command_names = ('slap', 'lastkill', 'lastdeath', 'hs', 'spais', 'price')
 
 
 def log(message):
+    message = '[{}] {}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message)
+    print(message)
     with open(config['LOG_FILENAME'], 'a') as f:
-        f.write('[{}] {}\n'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message))
+        f.write(message + '\n')
 
 
 @bot.event
@@ -35,7 +41,7 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
-    if message.content.startswith(config['COMMAND_PREFIX']) and not message.content.lower() in command_names:
+    if message.content.startswith(config['COMMAND_PREFIX']) and not message.content.lower()[1:].split(' ')[0] in command_names:
         await bot.send_message(message.channel, 'If you were talking to me, I didn\'t catch that')
         log('Unknown command "{}"'.format(message.content))
     if 'bot' in message.content.lower():
@@ -75,4 +81,14 @@ async def command_price(item):
 
 
 if __name__ == '__main__':
-    bot.run(config['BOT_TOKEN'])
+    try:
+        log('Running ...')
+        bot.loop.run_until_complete(bot.start(config['BOT_TOKEN']))
+    except KeyboardInterrupt:
+        log('Logging out ...')
+        bot.loop.run_until_complete(bot.logout())
+        log('Logged out')
+    finally:
+        log('Closing ...')
+        bot.loop.close()
+        log('Done')
