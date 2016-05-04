@@ -3,6 +3,7 @@ from discord.ext import commands
 import pycrest
 import requests
 import json
+from datetime import datetime
 
 
 with open('config.json') as f:
@@ -21,9 +22,14 @@ command_names = ('slap', 'lastkill', 'lastdeath', 'hs', 'spais', 'price')
 #   - price [name] - prints the Jita price for the item by name
 
 
+def log(message):
+    with open(config['LOG_FILENAME'], 'a') as f:
+        f.write('[{}] {}\n'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message))
+
+
 @bot.event
 async def on_ready():
-    print('Running ...')
+    log('Running ...')
 
 
 @bot.event
@@ -31,7 +37,9 @@ async def on_message(message):
     await bot.process_commands(message)
     if message.content.startswith(config['COMMAND_PREFIX']) and not message.content.lower() in command_names:
         await bot.send_message(message.channel, 'If you were talking to me, I didn\'t catch that')
-        print('Unknown command "{}"'.format(message.content))
+        log('Unknown command "{}"'.format(message.content))
+    if 'bot' in message.content.lower():
+        log('Bot in message: "{}"'.format(message.content))
 
 
 @bot.command(name='slap', description='slap a user')
@@ -53,17 +61,17 @@ async def command_lastdeath():
 
 @bot.command(name='hs')
 async def command_hs():
-    print('"hs" command not implemented')
+    log('"hs" command not implemented')
 
 
 @bot.command(name='spais')
 async def command_spais():
-    print('"spais" command not implemented')
+    log('"spais" command not implemented')
 
 
 @bot.command(name='price')
 async def command_price(item):
-    print('"price" command not implemented')
+    log('"price" command not implemented')
 
 
 if __name__ == '__main__':
