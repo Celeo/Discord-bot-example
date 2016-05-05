@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 import discord
 from discord.ext import commands
-# import pycrest
 import requests
 import json
 from datetime import datetime
 from random import randint
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+# import pycrest
 
 
 with open('config.json') as f:
@@ -73,8 +78,27 @@ async def command_hs(context):
     if not context.message.channel.name == 'opsec':
         await bot.say('This isn\'t the opsec channel, you spy!')
         return
-    # TODO
-    await bot.say('I don\'t know if there\'s a highsec system in the chain because I don\'t have eyes.')
+    await bot.send_typing(context.message.channel)
+    try:
+        driver = webdriver.PhantomJS()
+        driver.get('https://tripwire.eve-apps.com/?system=J214811')
+        driver.find_element_by_xpath('//*[@id="app_info"]/h1[2]/a').click()
+        driver.find_element_by_xpath('//*[@id="username"]').send_keys(config['TRIPWIRE']['LOGIN']['USERNAME'])
+        driver.find_element_by_xpath('//*[@id="password"]').send_keys(config['TRIPWIRE']['LOGIN']['PASSWORD'])
+        driver.find_element_by_xpath('//*[@id="reg"]/form/div[3]/button').click()
+        WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="chainMap"]/table/tbody/tr[2]')))
+        soup = BeautifulSoup(driver.find_element_by_xpath('//*[@id="chainMap"]/table/tbody').get_attribute('innerHTML'), 'html.parser')
+        driver.quit()
+        tags = soup.find_all('td', {'class': 'node'})
+        highsecs = []
+        for tag in tags:
+            for child in tag.findChildren('span'):
+                if 'hisec' in child['class']:
+                    highsecs.append(tag.findChildren('a')[0].text)
+        await bot.say('Yes, the following systems are in the chain: ' + ', '.join(highsecs))
+    except Exception as e:
+        log('Exception occured when getting highsec systems: ' + str(e))
+        await bot.say('Well, something broke, so I don\'t know.')
 
 
 @bot.command(name='spais', no_pm=True, pass_context=True, aliases=['spai', 'spies', 'spy'], help='Find the spies')

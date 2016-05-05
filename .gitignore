@@ -1,3 +1,4 @@
 env
 *.pyc
 *.log
+config.json
