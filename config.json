@@ -7,5 +7,11 @@
         "NAME": "Wormbro"
     },
     "LINKS": {},
-    "LOG_FILENAME": "bot.log"
+    "LOG_FILENAME": "bot.log",
+    "TRIPWIRE": {
+        "LOGIN": {
+            "USERNAME": "",
+            "PASSWORD": ""
+        }
+    }
 }
