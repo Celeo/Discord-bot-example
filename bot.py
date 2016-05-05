@@ -45,16 +45,26 @@ async def command_slap(user: str):
     await bot.say('* slaps {} around a bit with a large trout*'.format(user))
 
 
-@bot.command(name='lastkill', help='show the last Wormbro kill')
-async def command_lastkill():
-    js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/kills/limit/1/'.format(config['CORP']['ID'])).json()[0]
-    await bot.say('Latest {} kill: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
+@bot.command(name='lastkill', pass_context=True, help='show the last Wormbro kill')
+async def command_lastkill(context):
+    await bot.send_typing(context.message.channel)
+    try:
+        js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/kills/limit/1/'.format(config['CORP']['ID']), timeout=10).json()[0]
+        await bot.say('Latest {} kill: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
+    except Exception as e:
+        log('Excepton with command_lastkill: ' + str(e))
+        await bot.say('Something went wrong and I couldn\'t get the zkb data.')
 
 
-@bot.command(name='lastdeath', help='show the last Wormbro kill')
-async def command_lastdeath():
-    js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/losses/limit/1/'.format(config['CORP']['ID'])).json()[0]
-    await bot.say('Latest {} death: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
+@bot.command(name='lastdeath', pass_context=True, help='show the last Wormbro kill')
+async def command_lastdeath(context):
+    await bot.send_typing(context.message.channel)
+    try:
+        js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/losses/limit/1/'.format(config['CORP']['ID']), timeout=10).json()[0]
+        await bot.say('Latest {} death: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
+    except Exception as e:
+        log('Excepton with command_lastdeath: ' + str(e))
+        await bot.say('Something went wrong and I couldn\'t get the zkb data.')
 
 
 @bot.command(name='hs', no_pm=True, pass_context=True, help='check if there\'s a highsec system in the chain')
