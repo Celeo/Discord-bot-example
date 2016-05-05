@@ -40,25 +40,24 @@ async def on_message(message):
         log('Bot in message: "{}"'.format(message.content))
 
 
-@bot.command(name='slap', description='slap a user', help='slap a user')
+@bot.command(name='slap', help='slap a user')
 async def command_slap(user: str):
     await bot.say('* slaps {} around a bit with a large trout*'.format(user))
 
 
-@bot.command(name='lastkill', description='show the last Wormbro kill', help='show the last Wormbro kill')
+@bot.command(name='lastkill', help='show the last Wormbro kill')
 async def command_lastkill():
     js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/kills/limit/1/'.format(config['CORP']['ID'])).json()[0]
     await bot.say('Latest {} kill: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
 
 
-@bot.command(name='lastdeath', description='show the last Wormbro kill', help='show the last Wormbro kill')
+@bot.command(name='lastdeath', help='show the last Wormbro kill')
 async def command_lastdeath():
     js = requests.get('https://zkillboard.com/api/kills/corporationID/{}/losses/limit/1/'.format(config['CORP']['ID'])).json()[0]
     await bot.say('Latest {} death: https://zkillboard.com/kill/{}/'.format(config['CORP']['NAME'], js['killID']))
 
 
-@bot.command(name='hs', no_pm=True, pass_context=True, description='check if there\'s a highsec system in the chain',
-    help='check if there\'s a highsec system in the chain')
+@bot.command(name='hs', no_pm=True, pass_context=True, help='check if there\'s a highsec system in the chain')
 async def command_hs(context):
     if not context.message.channel.name == 'opsec':
         await bot.say('This isn\'t the opsec channel, you spy!')
@@ -67,7 +66,7 @@ async def command_hs(context):
     await bot.say('I don\'t know if there\'s a highsec system in the chain because I don\'t have eyes.')
 
 
-@bot.command(name='spais', no_pm=True, pass_context=True, description='Find the spies', aliases=['spai', 'spies', 'spy'],
+@bot.command(name='spais', no_pm=True, pass_context=True, aliases=['spai', 'spies', 'spy'],
     help='Find the spies')
 async def command_spais(context):
     online_members = list(context.message.channel.server.members)
@@ -78,14 +77,14 @@ async def command_spais(context):
         await bot.say('{0.name} is a spy!'.format(spy))
 
 
-@bot.command(name='price', description='price-check an item name in Jita', help='Price-check an item name in Jita')
+@bot.command(name='price', help='Price-check an item name in Jita')
 async def command_price(item: str):
     # TODO
     log('"price" command not implemented')
     await bot.say('*shrugs*')
 
 
-@bot.command(name='joined', pass_context=True, description='print the target\'s join date', help='Print the target\'s join date')
+@bot.command(name='joined', pass_context=True, help='Print the target\'s join date')
 async def command_joined(context, member: discord.Member=None):
     if not member:
         member = context.message.author
@@ -96,7 +95,7 @@ async def command_joined(context, member: discord.Member=None):
         await bot.say('{0.name} joined on {0.joined_at}'.format(member))
 
 
-@bot.command(name='link', aliases=['links'], description='shows a link', help='shows a link')
+@bot.command(name='link', aliases=['links'], help='shows a link')
 async def command_link(target: str=None):
     if not target:
         if config['LINKS']:
@@ -111,7 +110,7 @@ async def command_link(target: str=None):
         await bot.say('I don\'t know what that is. Have you tried Google?')
 
 
-@bot.command(name='addlink', aliases=['setlink'], description='add or set a link', help='add or set a link')
+@bot.command(name='addlink', aliases=['setlink'], help='add or set a link')
 async def command_addlink(target: str=None, url: str=None):
     if not target or not url:
         await bot.say('It\'s !addlink [name] [url]')
