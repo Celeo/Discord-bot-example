@@ -77,8 +77,7 @@ async def command_hs(context):
     await bot.say('I don\'t know if there\'s a highsec system in the chain because I don\'t have eyes.')
 
 
-@bot.command(name='spais', no_pm=True, pass_context=True, aliases=['spai', 'spies', 'spy'],
-    help='Find the spies')
+@bot.command(name='spais', no_pm=True, pass_context=True, aliases=['spai', 'spies', 'spy'], help='Find the spies')
 async def command_spais(context):
     online_members = list(context.message.channel.server.members)
     spy = online_members[randint(0, len(online_members) - 1)]
