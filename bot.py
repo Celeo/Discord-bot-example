@@ -16,6 +16,7 @@ bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], description=config['
 # crest = pycrest.EVE()
 # print('Getting item data ...')
 # item_data = crest().marketTypes()
+# TODO: convert all keys to lowercase
 print('Setup complete')
 
 
