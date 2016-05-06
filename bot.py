@@ -41,9 +41,14 @@ async def on_ready():
 async def on_message(message):
     await bot.process_commands(message)
     if message.content.startswith(config['COMMAND_PREFIX']):
-        log('Command "{}"'.format(message.content))
+        log('Command "{}" from "{}"'.format(message.content, message.author.name))
+        if message.content[1:].lower() in config['DISMISS_TRIGGERS']:
+            if message.author.name in config['ADMINS']:
+                await bot.say('*waves*')
+                # TODO: leave the server or channel
+                return
     if 'bot' in message.content.lower():
-        log('Bot in message: "{}"'.format(message.content))
+        log('Bot in message: "{}" by "{}"'.format(message.content, message.author.name))
 
 
 @bot.command(name='slap', help='slap a user')
