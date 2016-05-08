@@ -15,5 +15,9 @@
             "USERNAME": "",
             "PASSWORD": ""
         }
+    },
+    "AUTH": {
+        "LINK_URL": "/{}/{}",
+        "SECRET": ""
     }
 }

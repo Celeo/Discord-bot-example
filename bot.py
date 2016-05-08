@@ -163,6 +163,19 @@ async def command_addlink(target: str=None, url: str=None):
     await bot.say('Link added')
 
 
+@bot.command(name='register', no_pm=True, pass_context=True, help='link your Discord account with auth')
+async def command_register(context, key: str=None):
+    if not key:
+        await bot.say('It\'s !register [key]')
+        return
+    r = requests.post(config['AUTH']['LINK_URL'].format(context.message.author.name, key),
+        headers={'bot-secret': config['AUTH']['SECRET']})
+    if r.status_code == 200:
+        await bot.say('You\'re all linked up!')
+    else:
+        await bot.say('Didn\'t work. Are you sure you have the key correct?')
+
+
 if __name__ == '__main__':
     try:
         log('Starting run loop ...')
