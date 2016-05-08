@@ -173,7 +173,7 @@ async def command_register(context, key: str=None):
     log('Registration POST returned status code {}'.format(r.status_code))
     if r.status_code == 200:
         await bot.say('Linking successful!')
-    elif r.status_code == 204:
+    elif r.status_code == 304:
         await bot.say('You\'ve already linked your account - no need to do it again.')
     else:
         await bot.say('Didn\'t work. Are you sure you have the key correct?')
