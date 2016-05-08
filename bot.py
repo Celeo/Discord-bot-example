@@ -170,8 +170,11 @@ async def command_register(context, key: str=None):
         return
     r = requests.post(config['AUTH']['LINK_URL'].format(context.message.author.name, key),
         headers={'bot-secret': config['AUTH']['SECRET']})
+    log('Registration POST returned status code {}'.format(r.status_code))
     if r.status_code == 200:
-        await bot.say('You\'re all linked up!')
+        await bot.say('Linking successful!')
+    elif r.status_code == 204:
+        await bot.say('You\'ve already linked your account - no need to do it again.')
     else:
         await bot.say('Didn\'t work. Are you sure you have the key correct?')
 
