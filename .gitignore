@@ -1,4 +1,3 @@
-env
-*.pyc
 *.log
 config.json
+node_modules
